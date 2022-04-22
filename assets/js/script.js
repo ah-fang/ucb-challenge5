@@ -16,35 +16,43 @@ INTERACTIVITY
 var currentDay = document.getElementById("currentDay");
 var today = document.createElement("p");
 var currentTime = moment().hour();
-var timeBlox = document.getElementsByTagName("textarea");
 
 today.textContent = moment().format("dddd, MMMM Do, YYYY"); //use Moment.js to get today's date
 currentDay.appendChild(today);
 
 function colorHours() {
-    //check in a loop?
-    
-    var hour = $(".hour").text().trim();
-
-    var time = moment(hour, "LT");
-    console.log(time);
-
     //remove any previous classes from all timeblocks
-    $(".hour").removeClass(".present .past .future");
+    $("textarea").removeClass(".present .past .future");
 
-    // use classes to change color related to current time
-    if (moment().isAfter(time)) {
-        $(".hour").addClass(".past");
-    } else if (moment().isBefore(time)) {
-        $(".hour").addClass(".future");
-    } else {
-        $(".hour").addClass(".present");
-    }
+    $(".time-block").each(function () {
+        var blockTime = parseInt($(this).attr("id").split("hour")[1]);
+        console.log(blockTime, currentTime);
+        
+        // use classes to change color related to current time
+        if (currentTime > blockTime) {
+            $("textarea").addClass(".past");
+        } else if (currentTime < blockTime) {
+            $("textarea").addClass(".future");
+        } else {
+            $("textarea").addClass(".present");
+        }
+        console.log($("textarea").attr("class"));
+    })
 }
 
 function saveTask() {
     //save text entered on the same textarea as that button (check parent element?) to localStorage
+        //get nearby values.
+        console.log(this);
+        var text = $(this).siblings(".description").val();
+        var time = $(this).parent().attr("id");
+    
+        //set items in local storage.
+        localStorage.setItem(time, text);
 }
 
+$(".saveBtn").on("click", saveTask());
+
 $("saveBtn").click(saveTask);
+
 colorHours();
