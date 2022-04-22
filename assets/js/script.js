@@ -8,9 +8,6 @@ DISPLAY
 5. Color all uls below(after, in Moment) in green
 (6) Bonus: Should reset at the start of each day
 
-INTERACTIVITY
-1. Clicking any UL turns it into textarea
-2. Clicking save button in that row creates an li on that ul IF text has been typed. If not nothing happens
 */
 
 var currentDay = document.getElementById("currentDay");
@@ -21,38 +18,45 @@ today.textContent = moment().format("dddd, MMMM Do, YYYY"); //use Moment.js to g
 currentDay.appendChild(today);
 
 function colorHours() {
-    //remove any previous classes from all timeblocks
-    $("textarea").removeClass(".present .past .future");
-
-    $(".time-block").each(function () {
+    $("textarea").each(function () {
         var blockTime = parseInt($(this).attr("id").split("hour")[1]);
         console.log(blockTime, currentTime);
+            //remove any previous classes from all timeblocks
+        $(this).removeClass(".past .present .future");
         
         // use classes to change color related to current time
         if (currentTime > blockTime) {
-            $("textarea").addClass(".past");
-        } else if (currentTime < blockTime) {
-            $("textarea").addClass(".future");
-        } else {
-            $("textarea").addClass(".present");
+            $(this).addClass("past");
+        } 
+        else if (currentTime < blockTime) {
+            $(this).addClass("future");
+        } 
+        else {
+            $(this).addClass("present");
         }
-        console.log($("textarea").attr("class"));
     })
 }
 
+//Retrieves any text saved from localStorage
+$("#hour9").val(localStorage.getItem("hour9"));
+$("#hour10").val(localStorage.getItem("hour10"));
+$("#hour11").val(localStorage.getItem("hour11"));
+$("#hour12").val(localStorage.getItem("hour12"));
+$("#hour13").val(localStorage.getItem("hour13"));
+$("#hour14").val(localStorage.getItem("hour14"));
+$("#hour15").val(localStorage.getItem("hour15"));
+$("#hour16").val(localStorage.getItem("hour16"));
+$("#hour17").val(localStorage.getItem("hour17"));
+
 function saveTask() {
-    //save text entered on the same textarea as that button (check parent element?) to localStorage
-        //get nearby values.
-        console.log(this);
-        var text = $(this).siblings(".description").val();
-        var time = $(this).parent().attr("id");
+    //save text entered on the same textarea as that button's parent to localStorage
+    var text = $(this).siblings(".description").val();
+    var time = $(this).siblings(".description").attr("id");
     
-        //set items in local storage.
-        localStorage.setItem(time, text);
+    //set items in localStorage
+    localStorage.setItem(time, text);
 }
 
-$(".saveBtn").on("click", saveTask());
-
-$("saveBtn").click(saveTask);
+$(".saveBtn").click(saveTask);
 
 colorHours();
